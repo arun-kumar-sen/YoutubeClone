@@ -1,12 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
+import { YT_SEARCH_API } from "../utils/constants";
 
 const Head = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  /**
+   * Point 1 => searchQuery is a const but we are able to change it why ??
+   *  because every time it is rendering and its a new variable
+   */
+
   const dispatch = useDispatch();
 
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
+  };
+
+  useEffect(() => {
+    /**
+     * Make an API call after every key press
+     * but if the difference between the 2 API calls is < 200 ms
+     * decline the API call
+     */
+    const timer = setTimeout(() => getSearchSuggestions(), 200);
+
+    return () => {
+      console.log("clear timer ");
+      clearTimeout(timer);
+    };
+  }, [searchQuery]);
+
+  /**
+   *
+   * key - i
+   * - render the component
+   * - useEffect()
+   * - start timer => make API call after 200 ms
+   *
+   *
+   * key - ip
+   * - destroy the component ( i.e call useEffect return method and clears the timer)
+   * - re-render the component
+   * - useEffect()
+   * - start timer => make API call after 200ms but but but its again a new timer
+   *
+   * setTimeOut(200) - make an API call
+   *
+   */
+
+  const getSearchSuggestions = async () => {
+    const data = await fetch(YT_SEARCH_API + searchQuery);
+    const json = await data.json();
+    setSuggestions(json[1]);
   };
 
   return (
@@ -27,13 +75,33 @@ const Head = () => {
         </a>
       </div>
       <div className="ml-96 w-3/4">
-        <input
-          className="w-1/2 border border-gray-400 p-2 rounded-l-full"
-          type="text"
-        />
-        <button className="bg-gray-100 border border-gray-400 py-2 px-5 rounded-r-full">
-          🔍
-        </button>
+        <div>
+          <input
+            className="w-1/2 border border-gray-400 px-9 p-2 rounded-l-full"
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setShowSuggestions(true)}
+            onBlur={() => setShowSuggestions(false)}
+          />
+          <button className="bg-gray-100 border border-gray-400 py-2 px-5 rounded-r-full">
+            🔍
+          </button>
+        </div>
+        {showSuggestions && (
+          <div className="absolute bg-white w-[34rem] border border-gray-100 rounded-lg shadow-lg ">
+            <ul>
+              {suggestions?.map((item) => (
+                <li
+                  key={item}
+                  className="py-2 px-5  shadow-sm rounded-md hover:bg-gray-100"
+                >
+                  🔍 {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <div>
         <img
