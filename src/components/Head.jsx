@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { YT_SEARCH_API } from "../utils/constants";
+import { cacheResults } from "../utils/searchSlice";
 
 const Head = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,6 +15,14 @@ const Head = () => {
    */
 
   const dispatch = useDispatch();
+  const searchCache = useSelector((store) => store?.search);
+  /**
+   * searchCache = {
+   *    "iphone":["ihpne 11","iphone 13"]
+   * }
+   *
+   *  searchQuery = iphone
+   */
 
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
@@ -25,7 +34,13 @@ const Head = () => {
      * but if the difference between the 2 API calls is < 200 ms
      * decline the API call
      */
-    const timer = setTimeout(() => getSearchSuggestions(), 200);
+    const timer = setTimeout(() => {
+      if (searchCache[searchQuery]) {
+        setSuggestions(searchCache[searchQuery]);
+      } else {
+        getSearchSuggestions();
+      }
+    }, 200);
 
     return () => {
       console.log("clear timer ");
@@ -55,6 +70,12 @@ const Head = () => {
     const data = await fetch(YT_SEARCH_API + searchQuery);
     const json = await data.json();
     setSuggestions(json[1]);
+    // update the cache
+    dispatch(
+      cacheResults({
+        [searchQuery]: json[1],
+      })
+    );
   };
 
   return (

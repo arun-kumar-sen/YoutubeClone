@@ -55,3 +55,23 @@ setTimeout(() => getSearchSuggestions(), 200);
   -
   - setTimeOut(200) - make an API call
   - \*/
+
+  Cache:
+
+  [i,ip,iph,iphon,iphone]
+  Time complexity to search in array = 0(n)
+
+      {
+      i:
+      ip:
+      iph:
+      ipho:
+      iphon:
+      iphone:
+      }
+
+  Time complexity to search in object / map /hashmap = 0(1)
+
+  so better use an object than array for cache
+
+  but new Map() is even more better
