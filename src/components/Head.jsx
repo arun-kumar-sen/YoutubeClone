@@ -43,7 +43,6 @@ const Head = () => {
     }, 200);
 
     return () => {
-      console.log("clear timer ");
       clearTimeout(timer);
     };
   }, [searchQuery]);
