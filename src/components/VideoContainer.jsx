@@ -2,9 +2,13 @@ import React, { useEffect, useState } from "react";
 import { YT_VIDEOS_API } from "../utils/constants";
 import VideoCard from "./VideoCard";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { videoCardsData } from "../utils/videoCardsSlice";
 
 const VideoContainer = () => {
-  const [videos, setVideos] = useState([]);
+  // const [videos, setVideos] = useState([]);
+  const dispatch = useDispatch();
+  const videos = useSelector((store) => store.videos?.videoCards);
 
   useEffect(() => {
     getVideos();
@@ -13,7 +17,8 @@ const VideoContainer = () => {
   const getVideos = async () => {
     const data = await fetch(YT_VIDEOS_API);
     const json = await data?.json();
-    setVideos(json?.items);
+    dispatch(videoCardsData(json?.items));
+    // setVideos(json?.items);
   };
 
   return (
