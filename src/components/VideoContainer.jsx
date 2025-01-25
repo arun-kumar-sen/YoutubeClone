@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { videoCardsData } from "../utils/videoCardsSlice";
 
 const VideoContainer = () => {
-  // const [videos, setVideos] = useState([]);
   const dispatch = useDispatch();
   const videos = useSelector((store) => store.videos?.videoCards);
+  console.log(videos);
 
   useEffect(() => {
     getVideos();
@@ -18,13 +18,12 @@ const VideoContainer = () => {
     const data = await fetch(YT_VIDEOS_API);
     const json = await data?.json();
     dispatch(videoCardsData(json?.items));
-    // setVideos(json?.items);
   };
 
   return (
     <div className="flex flex-wrap">
       {videos?.map((video) => (
-        <Link key={video.id} to={`/watch?v=${video.id}`}>
+        <Link key={video.id} to={`/watch?v=${video.id.videoId || video.id}`}>
           <VideoCard info={video} />
         </Link>
       ))}

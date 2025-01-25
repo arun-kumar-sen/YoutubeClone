@@ -30,11 +30,11 @@ const Head = () => {
   };
 
   const handleSearchClick = async (searchItem) => {
+    setShowSuggestions(false);
     dispatch(emptyVideosData());
     const data = await fetch(YT_SEARCH + searchItem);
     const json = await data.json();
     dispatch(videoCardsData(json.items));
-    setShowSuggestions(false);
   };
 
   useEffect(() => {
@@ -111,7 +111,6 @@ const Head = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setShowSuggestions(true)}
-            // onBlur={() => setShowSuggestions(false)}
           />
           <button className="bg-gray-100 border border-gray-400 py-2 px-5 rounded-r-full">
             🔍
