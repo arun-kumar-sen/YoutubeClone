@@ -8,7 +8,6 @@ import { videoCardsData } from "../utils/videoCardsSlice";
 const VideoContainer = () => {
   const dispatch = useDispatch();
   const videos = useSelector((store) => store.videos?.videoCards);
-  console.log(videos);
 
   useEffect(() => {
     getVideos();

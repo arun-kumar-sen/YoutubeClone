@@ -75,3 +75,11 @@ setTimeout(() => getSearchSuggestions(), 200);
   so better use an object than array for cache
 
   but new Map() is even more better
+
+---
+
+(usually for live apps we need web sockets but cricbuzz uses api polling 😂 after every 25 sec api is again called )
+
+WEB SOCKETS => Its a handshake established between SERVER and UI , so that data can be sent quickly from either side i.e bi-directional data sent , no regular intervals and initial connection takes some time (Ex: Zerodha, tradings app, whatsApp,you-tube live chat)
+
+LONG-POLLING / API POLLING => UI requests data , data flows from SEVER to UI i.e one direction and after an regular interval it happens (Ex: Gmail, cricbuzz)
